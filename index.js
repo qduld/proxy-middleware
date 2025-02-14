@@ -1,6 +1,7 @@
 import express from "express";
 import fetch from "node-fetch";
 import https from "https";
+import http from "http";
 import fs from "fs";
 
 // 加载 SSL 证书
@@ -9,19 +10,11 @@ const options = {
     cert: fs.readFileSync("/etc/letsencrypt/live/franklinzelo.duckdns.org/fullchain.crt"), // 证书路径
 };
 
-// 启动 HTTPS 服务
-https.createServer(options, app).listen(PORT, () => {
-    console.log(`HTTPS 代理服务器已启动：https://localhost:${PORT}`);
-});
-
-// 启动 HTTP 服务并将请求重定向到 HTTPS
-const http = require("http");
-http.createServer((req, res) => {
-    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
-    res.end();
-}).listen(80, () => {
-    console.log("HTTP 重定向服务已启动：http://localhost:80");
-});
+// 加载 SSL 证书
+// const options = {
+//     key: fs.readFileSync("D:\\OpenSSL-Win64\\key.pem"), // 私钥路径
+//     cert: fs.readFileSync("D:\\OpenSSL-Win64\\cert.pem"), // 证书路径
+// };
 
 const app = express();
 const PORT = 8989;
@@ -105,6 +98,20 @@ app.get("/proxy", async (req, res) => {
         res.status(500).json({ error: "代理请求失败" });
     }
 });
-app.listen(PORT, () => {
-    console.log(`代理服务器已启动：http://localhost:${PORT}`);
+// app.listen(PORT, () => {
+//     console.log(`代理服务器已启动：http://localhost:${PORT}`);
+// });
+
+
+// 启动 HTTPS 服务
+https.createServer(options, app).listen(PORT, () => {
+    console.log(`HTTPS 代理服务器已启动：https://localhost:${PORT}`);
+});
+
+// 启动 HTTP 服务并将请求重定向到 HTTPS
+http.createServer((req, res) => {
+    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+    res.end();
+}).listen(80, () => {
+    console.log("HTTP 重定向服务已启动：http://localhost:80");
 });
