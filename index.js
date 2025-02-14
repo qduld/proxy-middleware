@@ -104,8 +104,12 @@ app.get("/proxy", async (req, res) => {
 
 
 // 启动 HTTPS 服务
-https.createServer(options, app).listen(PORT, () => {
-    console.log(`HTTPS 代理服务器已启动：https://localhost:${PORT}`);
+// https.createServer(options, app).listen(PORT, () => {
+//     console.log(`HTTPS 代理服务器已启动：https://localhost:${PORT}`);
+// });
+
+https.createServer(options, app).listen(PORT, "0.0.0.0", () => {
+    console.log(`HTTPS 代理服务器已启动：https://0.0.0.0:${PORT}`);
 });
 
 // 启动 HTTP 服务并将请求重定向到 HTTPS
