@@ -109,9 +109,9 @@ https.createServer(options, app).listen(PORT, () => {
 });
 
 // 启动 HTTP 服务并将请求重定向到 HTTPS
-http.createServer((req, res) => {
-    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
-    res.end();
-}).listen(80, () => {
-    console.log("HTTP 重定向服务已启动：http://localhost:80");
-});
+// http.createServer((req, res) => {
+//     res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+//     res.end();
+// }).listen(80, () => {
+//     console.log("HTTP 重定向服务已启动：http://localhost:80");
+// });
