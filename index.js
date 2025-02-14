@@ -7,7 +7,7 @@ import fs from "fs";
 // 加载 SSL 证书
 const options = {
     key: fs.readFileSync("/etc/letsencrypt/live/franklinzelo.duckdns.org/privkey.pem"), // 私钥路径
-    cert: fs.readFileSync("/etc/letsencrypt/live/franklinzelo.duckdns.org/fullchain.crt"), // 证书路径
+    cert: fs.readFileSync("/etc/letsencrypt/live/franklinzelo.duckdns.org/fullchain.pem"), // 证书路径
 };
 
 // 加载 SSL 证书
