@@ -98,6 +98,29 @@ app.get("/proxy", async (req, res) => {
         res.status(500).json({ error: "代理请求失败" });
     }
 });
+
+app.get('/share', (req, res) => {
+    const { title, description, image } = req.query;
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta property="og:title" content="${title || '默认标题'}">
+            <meta property="og:description" content="${description || '默认描述'}">
+            <meta property="og:image" content="${image || 'https://franklinzelo.duckdns.org:8989/bot_description_picture.png'}">
+            <meta property="og:url" content="https://franklinzelo.duckdns.org:8989/share?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(image)}">
+            <meta property="og:type" content="website">
+            <title>${title || '默认标题'}</title>
+        </head>
+        <body>
+            <h1>${title || '默认标题'}</h1>
+            <p>${description || '默认描述'}</p>
+        </body>
+        </html>
+    `);
+});
 // app.listen(PORT, () => {
 //     console.log(`代理服务器已启动：http://localhost:${PORT}`);
 // });
