@@ -109,7 +109,7 @@ app.get('/share', (req, res) => {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta property="og:title" content="${title || '默认标题'}">
             <meta property="og:description" content="${description || '默认描述'}">
-            <meta property="og:image" content="${image || 'https://franklinzelo.duckdns.org:8989/bot_description_picture.png'}">
+            <meta property="og:image" content="${image || 'https://franklinzelo.duckdns.org/bot_description_picture.png'}">
             <meta property="og:url" content="https://franklinzelo.duckdns.org:8989/share?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(image)}">
             <meta property="og:type" content="website">
             <title>${title || '默认标题'}</title>
