@@ -58,7 +58,7 @@ setInterval(() => {
     }
 }, 60 * 1000); // 每分钟清理一次
 
-app.get("/proxy", async (req, res) => {
+app.get("/node/proxy", async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) {
         return res.status(400).json({ error: "缺少 url 参数" });
@@ -99,7 +99,7 @@ app.get("/proxy", async (req, res) => {
     }
 });
 
-app.get('/share', (req, res) => {
+app.get('/node/share', (req, res) => {
     const { title, description, image } = req.query;
     res.send(`
         <!DOCTYPE html>
@@ -110,7 +110,7 @@ app.get('/share', (req, res) => {
             <meta property="og:title" content="${title || '默认标题'}">
             <meta property="og:description" content="${description || '默认描述'}">
             <meta property="og:image" content="${image || 'https://franklinzelo.duckdns.org/bot_description_picture.png'}">
-            <meta property="og:url" content="https://franklinzelo.duckdns.org:8989/share?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(image)}">
+            <meta property="og:url" content="https://franklinzelo.duckdns.org:8989/node/share?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(image)}">
             <meta property="og:type" content="website">
             <title>${title || '默认标题'}</title>
         </head>
