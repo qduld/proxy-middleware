@@ -107,16 +107,16 @@ app.get('/node/share', (req, res) => {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta property="og:title" content="${title || '默认标题'}">
-            <meta property="og:description" content="${description || '默认描述'}">
-            <meta property="og:image" content="${image || 'https://franklinzelo.duckdns.org/bot_description_picture.png'}">
-            <meta property="og:url" content="https://franklinzelo.duckdns.org:8989/node/share?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&image=${encodeURIComponent(image)}">
+            <meta property="og:title" content="MyBitFarm  Sow Now,Reap Tokens.">
+            <meta property="og:description" content="Welcome to join my team to steal vegetables together!">
+            <meta property="og:image" content="https://franklinzelo.duckdns.org/bot_description_picture.png">
+            <meta property="og:url" content="https://franklinzelo.duckdns.org:8989/node/share?scene=circle">
             <meta property="og:type" content="website">
-            <title>${title || '默认标题'}</title>
+            <title>MyBitFarm  Sow Now,Reap Tokens.</title>
         </head>
         <body>
-            <h1>${title || '默认标题'}</h1>
-            <p>${description || '默认描述'}</p>
+            <h1>MyBitFarm  Sow Now,Reap Tokens.</h1>
+            <p>Welcome to join my team to steal vegetables together!</p>
         </body>
         </html>
     `);
