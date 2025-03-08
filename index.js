@@ -132,9 +132,9 @@ app.get('/node/test', (req, res) => {
   res.send('Test response');
 });
 
-app.listen(PORT,'0.0.0.0',  () => {
-    console.log(`代理服务器已启动：http://localhost:${PORT}`);
-});
+// app.listen(PORT,'0.0.0.0',  () => {
+//     console.log(`代理服务器已启动：http://localhost:${PORT}`);
+// });
 
 // 启动 HTTPS 服务
 // https.createServer(options, app).listen(PORT, () => {
