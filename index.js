@@ -100,7 +100,6 @@ app.get("/node/proxy", async (req, res) => {
 });
 
 app.get('/node/share', (req, res) => {
-    const { title, description, image } = req.query;
     res.send(`
         <!DOCTYPE html>
         <html lang="en">
