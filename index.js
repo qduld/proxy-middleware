@@ -112,13 +112,13 @@ app.get('/node/share', (req, res) => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta property="og:title" content="MyBitFarm  Sow Now,Reap Tokens.">
-            <meta property="og:description" content="Welcome to join my team to steal vegetables together! [Launch Game](https://franklinzelo.duckdns.org/farm?scene=circle)">
+            <meta property="og:description" content="Welcome to join my team to steal vegetables together!">
             <meta property="og:image" content="https://franklinzelo.duckdns.org/bot_description_picture.png">
             <meta property="og:image:width" content="1200">
             <meta property="og:image:height" content="630">
             <meta property="og:url" content="https://franklinzelo.duckdns.org/farm?scene=circle">
             <meta property="og:type" content="website">
-            <meta property="tg:button" content="Launch Game">
+            <meta property="og:description" content="[Launch Game](https://franklinzelo.duckdns.org/farm?scene=circle)">
             <title>MyBitFarm  Sow Now,Reap Tokens.</title>
         </head>
         <body>
