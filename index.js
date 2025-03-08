@@ -118,6 +118,7 @@ app.get('/node/share', (req, res) => {
             <meta property="og:image:height" content="630">
             <meta property="og:url" content="https://franklinzelo.duckdns.org/farm?scene=circle">
             <meta property="og:type" content="website">
+            <meta property="tg:button" content="Launch Game">
             <title>MyBitFarm  Sow Now,Reap Tokens.</title>
         </head>
         <body>
