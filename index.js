@@ -110,6 +110,8 @@ app.get('/node/share', (req, res) => {
             <meta property="og:title" content="MyBitFarm  Sow Now,Reap Tokens.">
             <meta property="og:description" content="Welcome to join my team to steal vegetables together!">
             <meta property="og:image" content="https://franklinzelo.duckdns.org/bot_description_picture.png">
+            <meta property="og:image:width" content="1200">
+            <meta property="og:image:height" content="630">
             <meta property="og:url" content="https://franklinzelo.duckdns.org:8989/node/share?scene=circle">
             <meta property="og:type" content="website">
             <title>MyBitFarm  Sow Now,Reap Tokens.</title>
