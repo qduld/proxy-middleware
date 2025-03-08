@@ -58,6 +58,11 @@ setInterval(() => {
     }
 }, 60 * 1000); // 每分钟清理一次
 
+app.use('/node', (req, res, next) => {
+  // 处理所有以 /node 开头的请求
+  next();
+});
+
 app.get("/node/proxy", async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) {
@@ -122,10 +127,14 @@ app.get('/node/share', (req, res) => {
         </html>
     `);
 });
-// app.listen(PORT, () => {
-//     console.log(`代理服务器已启动：http://localhost:${PORT}`);
-// });
 
+app.get('/node/test', (req, res) => {
+  res.send('Test response');
+});
+
+app.listen(PORT,'0.0.0.0',  () => {
+    console.log(`代理服务器已启动：http://localhost:${PORT}`);
+});
 
 // 启动 HTTPS 服务
 // https.createServer(options, app).listen(PORT, () => {
