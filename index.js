@@ -116,9 +116,9 @@ app.get('/node/share', (req, res) => {
             <meta property="og:image" content="https://franklinzelo.duckdns.org/bot_description_picture.png">
             <meta property="og:image:width" content="1200">
             <meta property="og:image:height" content="630">
-            <meta property="og:url" content="https://franklinzelo.duckdns.org/farm?scene=circle">
-            <meta property="og:type" content="website">
-            <meta property="og:description" content="[Launch Game](https://franklinzelo.duckdns.org/farm?scene=circle)">
+            <meta property="og:url" content="tg://resolve?domain=MyBitFarmBot&startapp=webapp">
+            <meta property="og:description" content="Launch Game">
+            <meta name="telegram:card" content="summary_large_image">
             <title>MyBitFarm  Sow Now,Reap Tokens.</title>
         </head>
         <body>
