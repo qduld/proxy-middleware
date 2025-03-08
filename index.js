@@ -112,7 +112,7 @@ app.get('/node/share', (req, res) => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta property="og:title" content="MyBitFarm  Sow Now,Reap Tokens.">
-            <meta property="og:description" content="Welcome to join my team to steal vegetables together! [Launch](https://franklinzelo.duckdns.org/farm%3Fscene%3Dcircle)">
+            <meta property="og:description" content="Welcome to join my team to steal vegetables together! 点击开始游戏: https://franklinzelo.duckdns.org/farm?scene=circle">
             <meta property="og:image" content="https://franklinzelo.duckdns.org/bot_description_picture.png">
             <meta property="og:image:width" content="1200">
             <meta property="og:image:height" content="630">
