@@ -123,6 +123,10 @@ app.get('/node/share', (req, res) => {
         <body>
             <h1>MyBitFarm  Sow Now,Reap Tokens.</h1>
             <p>Welcome to join my team to steal vegetables together!</p>
+            <button onclick="window.location.href='https://franklinzelo.duckdns.org/farm?scene=circle'" 
+                    style="background: #4CAF50; color: white; padding: 15px 32px; font-size: 16px; border: none; cursor: pointer;">
+                Launch
+            </button>
         </body>
         </html>
     `);
