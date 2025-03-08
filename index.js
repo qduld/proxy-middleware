@@ -58,7 +58,7 @@ setInterval(() => {
     }
 }, 60 * 1000); // 每分钟清理一次
 
-app.get("/proxy", async (req, res) => {
+app.get("/node/proxy", async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) {
         return res.status(400).json({ error: "缺少 url 参数" });
@@ -99,7 +99,7 @@ app.get("/proxy", async (req, res) => {
     }
 });
 
-app.get('/share', (req, res) => {
+app.get('/node/share', (req, res) => {
     res.send(`
         <!DOCTYPE html>
         <html lang="en">
