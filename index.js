@@ -118,14 +118,14 @@ app.get('/node/share', (req, res) => {
             <meta property="og:image:height" content="630">
             <meta property="og:url" content="tg://resolve?domain=MyBitFarmBot&startapp=webapp">
             <meta property="og:description" content="Launch Game ->">
-             <meta property="og:description" content="tg://resolve?domain=MyBitFarmBot&startapp=scene=circle">
+             <meta property="og:description" content="tg://resolve?domain=MyBitFarmBot&startapp=scene=circles">
             <meta name="telegram:card" content="summary_large_image">
             <title>MyBitFarm  Sow Now,Reap Tokens.</title>
         </head>
         <body>
             <h1>MyBitFarm  Sow Now,Reap Tokens.</h1>
             <p>Welcome to join my team to steal vegetables together!</p>
-            <button onclick="window.location.href='tg://resolve?domain=MyBitFarmBot&startapp=scene=circle'" 
+            <button onclick="window.location.href='tg://resolve?domain=MyBitFarmBot&startapp=scene=circles'" 
                     style="background: #4CAF50; color: white; padding: 15px 32px; font-size: 16px; border: none; cursor: pointer;">
                 Launch
             </button>
