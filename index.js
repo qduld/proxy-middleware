@@ -18,14 +18,15 @@ const options = {
 // };
 
 const app = express();
-const PORT = 8989;
+const PORT_HTTP = 8989; // HTTP 端口
+const PORT_HTTPS = 8990; // HTTPS 端口
 
+// 中间件：允许跨域
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*"); // 允许所有来源访问
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // 允许的方法
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization"); // 允许的头部
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-    // 如果是预检请求，直接返回 204
     if (req.method === "OPTIONS") {
         return res.sendStatus(204);
     }
@@ -33,44 +34,37 @@ app.use((req, res, next) => {
     next();
 });
 
+// 缓存逻辑（与原代码相同）
 const cache = new Map();
 
-// 添加缓存项，设置过期时间为 1 小时
 function setCache(key, value) {
-    cache.set(key, { value, expiresAt: Date.now() + 60 * 60 * 1000 }); // 1 小时后过期
+    cache.set(key, { value, expiresAt: Date.now() + 60 * 60 * 1000 });
 }
 
-// 获取缓存项，检查是否过期
 function getCache(key) {
     const cachedItem = cache.get(key);
     if (cachedItem && cachedItem.expiresAt > Date.now()) {
         return cachedItem.value;
     }
-    cache.delete(key); // 删除过期缓存
+    cache.delete(key);
     return null;
 }
 
-// 定期清理过期缓存
 setInterval(() => {
     for (const [key, cachedItem] of cache.entries()) {
         if (cachedItem.expiresAt < Date.now()) {
             cache.delete(key);
         }
     }
-}, 60 * 1000); // 每分钟清理一次
+}, 60 * 1000);
 
-app.use('/node', (req, res, next) => {
-    // 处理所有以 /node 开头的请求
-    next();
-});
-
+// 路由：普通 HTTP 请求
 app.get("/node/proxy", async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) {
         return res.status(400).json({ error: "缺少 url 参数" });
     }
 
-    // 检查缓存
     const cachedData = getCache(targetUrl);
     if (cachedData) {
         console.log("从缓存中返回数据");
@@ -95,7 +89,6 @@ app.get("/node/proxy", async (req, res) => {
             data = await response.buffer();
         }
 
-        // 缓存数据
         setCache(targetUrl, { data, contentType });
 
         res.send(data);
@@ -158,19 +151,17 @@ wssFrontend.on('connection', (ws, req) => {
 
     if (!token) {
         console.error("No token provided, closing connection");
-        ws.close(4001, "Unauthorized"); // 关闭连接，返回错误码
+        ws.close(4001, "Unauthorized");
         return;
     }
 
     console.log(`Client authenticated with token: ${token}`);
 
-    // 存储前端客户端信息
     frontendClients.set(ws, { token });
 
-    // 连接到 Go 后台，并在请求头中添加 Token
     const wsBackend = new WebSocket(goBackendUrl, {
         headers: {
-            token, // 将 Token 添加到请求头
+            token,
         },
     });
 
@@ -183,7 +174,6 @@ wssFrontend.on('connection', (ws, req) => {
             const data = JSON.parse(message.data);
             console.log("Received from Go backend:", data);
 
-            // 将 Go 后台的响应转发回前端
             if (ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify(data));
             }
@@ -200,13 +190,11 @@ wssFrontend.on('connection', (ws, req) => {
         console.log("Disconnected from Go backend");
     };
 
-    // 监听前端消息
     ws.on('message', (message) => {
         try {
             const data = JSON.parse(message);
             console.log("Received message from frontend:", data);
 
-            // 转发消息到 Go 后台
             if (wsBackend.readyState === WebSocket.OPEN) {
                 wsBackend.send(JSON.stringify(data));
             } else {
@@ -217,37 +205,30 @@ wssFrontend.on('connection', (ws, req) => {
         }
     });
 
-    // 前端断开连接
     ws.on('close', () => {
         console.log('Frontend client disconnected');
         frontendClients.delete(ws);
-        wsBackend.close(); // 断开与 Go 后台的连接
+        wsBackend.close();
     });
 });
 
 // 启动 HTTP 服务
-const server = http.createServer(app);
+const httpServer = http.createServer(app);
 
-// 将 WebSocket 服务器挂载到 HTTP 服务器
-server.on('upgrade', (request, socket, head) => {
+httpServer.listen(PORT_HTTP, '0.0.0.0', () => {
+    console.log(`HTTP 服务已启动：http://localhost:${PORT_HTTP}`);
+});
+
+// 启动 HTTPS 服务
+const httpsServer = https.createServer(options, app);
+
+// 将 WebSocket 服务器挂载到 HTTPS 服务
+httpsServer.on('upgrade', (request, socket, head) => {
     wssFrontend.handleUpgrade(request, socket, head, (ws) => {
         wssFrontend.emit('connection', ws, request);
     });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`HTTP 代理服务器已启动：http://localhost:${PORT}`);
+httpsServer.listen(PORT_HTTPS, '0.0.0.0', () => {
+    console.log(`HTTPS WebSocket 服务已启动：wss://localhost:${PORT_HTTPS}`);
 });
-
-// 启动 HTTPS 服务
-// https.createServer(options, app).listen(PORT, '0.0.0.0', () => {
-//     console.log(`HTTPS 代理服务器已启动：https://localhost:${PORT}`);
-// });
-
-// 启动 HTTP 服务并将请求重定向到 HTTPS
-// http.createServer((req, res) => {
-//     res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
-//     res.end();
-// }).listen(80, () => {
-//     console.log("HTTP 重定向服务已启动：http://localhost:80");
-// });
