@@ -12,10 +12,10 @@ import { WebSocket, WebSocketServer } from "ws";
 // };
 
 // 加载 SSL 证书
-const options = {
-    key: fs.readFileSync("D:\\OpenSSL-Win64\\key.pem"), // 私钥路径
-    cert: fs.readFileSync("D:\\OpenSSL-Win64\\cert.pem"), // 证书路径
-};
+// const options = {
+//     key: fs.readFileSync("D:\\OpenSSL-Win64\\key.pem"), // 私钥路径
+//     cert: fs.readFileSync("D:\\OpenSSL-Win64\\cert.pem"), // 证书路径
+// };
 
 const app = express();
 const PORT = 8989;
