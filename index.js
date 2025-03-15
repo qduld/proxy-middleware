@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import https from "https";
 import http from "http";
 import fs from "fs";
+import { WebSocket, WebSocketServer } from "ws";
 
 // 加载 SSL 证书
 const options = {
@@ -59,8 +60,8 @@ setInterval(() => {
 }, 60 * 1000); // 每分钟清理一次
 
 app.use('/node', (req, res, next) => {
-  // 处理所有以 /node 开头的请求
-  next();
+    // 处理所有以 /node 开头的请求
+    next();
 });
 
 app.get("/node/proxy", async (req, res) => {
@@ -135,20 +136,112 @@ app.get('/node/share', (req, res) => {
 });
 
 app.get('/node/test', (req, res) => {
-  res.send('Test response');
+    res.send('Test response');
 });
 
-app.listen(PORT,'0.0.0.0',  () => {
-    console.log(`代理服务器已启动：http://localhost:${PORT}`);
+// 创建 WebSocket 服务器（前端连接）
+const wssFrontend = new WebSocketServer({ noServer: true });
+
+// 存储所有前端客户端及其 Token
+const frontendClients = new Map();
+
+// 连接到 Go 后台的 WebSocket 客户端
+const goBackendUrl = "wss://bf.tomocloud.com/ws"; // Go 后台的 WebSocket 地址
+
+// 处理前端 WebSocket 连接
+wssFrontend.on('connection', (ws, req) => {
+    console.log('New frontend client connected');
+
+    // 从 URL 查询参数中提取 Token
+    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+    const token = urlParams.get('token');
+
+    if (!token) {
+        console.error("No token provided, closing connection");
+        ws.close(4001, "Unauthorized"); // 关闭连接，返回错误码
+        return;
+    }
+
+    console.log(`Client authenticated with token: ${token}`);
+
+    // 存储前端客户端信息
+    frontendClients.set(ws, { token });
+
+    // 连接到 Go 后台，并在请求头中添加 Token
+    const wsBackend = new WebSocket(goBackendUrl, {
+        headers: {
+            token, // 将 Token 添加到请求头
+        },
+    });
+
+    wsBackend.onopen = () => {
+        console.log("Connected to Go backend");
+    };
+
+    wsBackend.onmessage = (message) => {
+        try {
+            const data = JSON.parse(message.data);
+            console.log("Received from Go backend:", data);
+
+            // 将 Go 后台的响应转发回前端
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(data));
+            }
+        } catch (e) {
+            console.error("Message parse error:", e);
+        }
+    };
+
+    wsBackend.onerror = (error) => {
+        console.error("WebSocket error with Go backend:", error);
+    };
+
+    wsBackend.onclose = () => {
+        console.log("Disconnected from Go backend");
+    };
+
+    // 监听前端消息
+    ws.on('message', (message) => {
+        try {
+            const data = JSON.parse(message);
+            console.log("Received message from frontend:", data);
+
+            // 转发消息到 Go 后台
+            if (wsBackend.readyState === WebSocket.OPEN) {
+                wsBackend.send(JSON.stringify(data));
+            } else {
+                console.error("Go backend is not connected");
+            }
+        } catch (e) {
+            console.error("Message handling error:", e);
+        }
+    });
+
+    // 前端断开连接
+    ws.on('close', () => {
+        console.log('Frontend client disconnected');
+        frontendClients.delete(ws);
+        wsBackend.close(); // 断开与 Go 后台的连接
+    });
+});
+
+// 启动 HTTP 服务
+const server = http.createServer(app);
+
+// 将 WebSocket 服务器挂载到 HTTP 服务器
+server.on('upgrade', (request, socket, head) => {
+    wssFrontend.handleUpgrade(request, socket, head, (ws) => {
+        wssFrontend.emit('connection', ws, request);
+    });
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`HTTP 代理服务器已启动：http://localhost:${PORT}`);
 });
 
 // 启动 HTTPS 服务
-// https.createServer(options, app).listen(PORT, () => {
+// https.createServer(options, app).listen(PORT, '0.0.0.0', () => {
 //     console.log(`HTTPS 代理服务器已启动：https://localhost:${PORT}`);
-// });
-
-// https.createServer(options, app).listen(PORT, "0.0.0.0", () => {
-//     console.log(`HTTPS 代理服务器已启动：https://0.0.0.0:${PORT}`);
 // });
 
 // 启动 HTTP 服务并将请求重定向到 HTTPS
